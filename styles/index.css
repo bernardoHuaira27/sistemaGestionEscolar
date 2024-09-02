@@ -1,0 +1,77 @@
+.background-image {
+    background: linear-gradient(rgba(13, 13, 13, 0.887), rgba(79, 79, 79, 0.15)), url('../img/fondo.jpg');
+    background-size: cover;
+    background-position: center; /* Centra la imagen */
+    background-repeat: no-repeat; /* Evita que la imagen se repita */
+    background-attachment: fixed;
+}
+
+.container{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: #f9f9f9;
+    padding: 10px;
+}
+
+.main-content {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 60%;
+    
+
+}
+
+.main-content img {
+    width: 100%; 
+    height: auto; /* Mantiene la proporción de la imagen */
+    max-width: 100%;
+
+}
+
+.form-container {
+    height: 100%;
+    font-size: 20px;
+    width: 400px;
+    background-color: #f9f9f9;
+    padding: 20px;
+
+}
+  
+.form-container input{
+    background: transparent;
+    font-size: 20px;
+    outline: none;
+    padding: 12px;
+    margin-top: 20px;
+    text-align: center;
+}
+.form-container input:focus{   
+    outline: none;
+    box-shadow: none;
+}
+.form-container button{
+    padding: 10px;
+    border-radius: 8px;
+}
+
+.nav button {
+    color: #000;
+}
+.nav button:hover {
+    color: #157347;
+    background: #e3fcf073;
+}
+
+@media (max-width: 900px) {
+    .main-content {
+        display: none;
+    }
+    .container{
+        padding: 10px;
+        background: transparent;
+    }
+   
+    
+}
