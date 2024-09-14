@@ -40,7 +40,7 @@
           </div>
           <div class="modal-footer">
             <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerra</button>
-            <button type="submit" class="btn btn-primary">Guardar</button>
+            <button id="action" type="submit" class="btn btn-primary">Guardar</button>
         </div>
           
         </form>
