@@ -17,7 +17,7 @@
     <title>Sistema Escolar</title>
 </head>
 <body class="app sidebar-mini">
-    <header class="app-header"><a class="app-header__logo" href="index.html">Sistema Escolar</a>
+    <header class="app-header"><a class="app-header__logo" href="index.html">I.E Jose Antonio</a>
         <a class="app-sidebar__toggle" href="#" data-toggle="sidebar" aria-label="Hide Sidebar"></a>
         <!-- Navbar Right Menu-->
         <ul class="app-nav">
