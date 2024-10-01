@@ -64,8 +64,6 @@ document.addEventListener("DOMContentLoaded", function () {
           }
         }
       }
-
-
     }
 
 });
@@ -81,7 +79,7 @@ function openModal() {
 function editarUsuario(id){
   let idusuario = id;
 
-  document.querySelector('#tituloModal').innerHTML = 'Actualizar Usiario';
+  document.querySelector('#tituloModal').innerHTML = 'Actualizar Usuario';
   document.querySelector('#action').innerHTML = 'Actualizar';
 
   let request = (window.XMLHttpRequest) ? new XMLHttpRequest() : new ActiveXObject('Microsoft.XMLHTTP');

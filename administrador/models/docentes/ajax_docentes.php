@@ -1,71 +1,70 @@
-<?php 
+<?php
 
 require_once '../../../includes/conexion.php';
 
 if (!empty($_POST)) {
-    // Validar que los campos no estén vacíos
+    // Verificar que los campos requeridos no estén vacíos
     if (empty($_POST['nombre']) || empty($_POST['direccion']) || empty($_POST['cedula']) || empty($_POST['telefono']) || empty($_POST['correo']) || empty($_POST['nivel_est'])) {
         $respuesta = array('status' => false, 'msg' => 'Todos los campos son necesarios');
     } else {
-        // Recuperar los valores del formulario
-        $iddocente = isset($_POST['iddocente']) ? intval($_POST['iddocente']) : 0; // El ID del docente (0 si es nuevo)
-        $nombre = isset($_POST['nombre']) ? trim($_POST['nombre']) : '';
-        $direccion = isset($_POST['direccion']) ? trim($_POST['direccion']) : '';
-        $cedula = isset($_POST['cedula']) ? trim($_POST['cedula']) : '';
-        $password = isset($_POST['password']) ? trim($_POST['password']) : '';
-        $telefono = isset($_POST['telefono']) ? trim($_POST['telefono']) : '';
-        $correo = isset($_POST['correo']) ? trim($_POST['correo']) : '';
-        $nivel_est = isset($_POST['nivel_est']) ? trim($_POST['nivel_est']) : '';
-        $estado = isset($_POST['listEstado']) ? intval($_POST['listEstado']) : 0;
+        // Recoger datos del formulario
+        $iddocente = isset($_POST['iddocente']) && $_POST['iddocente'] !== '' ? intval($_POST['iddocente']) : 0; // Convertir a entero
+        $nombre = $_POST['nombre'];
+        $direccion = $_POST['direccion'];
+        $cedula = $_POST['cedula'];
+        $password = !empty($_POST['password']) ? password_hash($_POST['password'], PASSWORD_DEFAULT) : '';
+        $telefono = $_POST['telefono'];
+        $correo = $_POST['correo'];
+        $nivel_est = $_POST['nivel_est'];
+        $estado = isset($_POST['listEstado']) && $_POST['listEstado'] !== '' ? $_POST['listEstado'] : 1; // Estado predeterminado si no se envía
 
-        // Cifrar la contraseña si no está vacía
-        if (!empty($password)) {
-            $password = password_hash($password, PASSWORD_DEFAULT);
-        }
-
-        // Comprobar si ya existe un docente con la misma cédula
+        // Validar cédula única excluyendo el registro actual
         $sql = 'SELECT * FROM profesor WHERE cedula = ? AND profesor_id != ? AND estado != 0';
         $query = $pdo->prepare($sql);
-        $query->execute(array($cedula, $iddocente)); // Comparar la cédula y excluir al docente actual
+        $query->execute(array($cedula, $iddocente)); // Validar que la cédula sea única excluyendo el docente actual
         $result = $query->fetch(PDO::FETCH_ASSOC);
 
+        // Si se encuentra un registro con la misma cédula para otro docente
         if ($result) {
-            $respuesta = array('status' => false, 'msg' => 'El docente ya existe');
+            $respuesta = array('status' => false, 'msg' => 'El docente con esta cédula ya existe');
         } else {
-            // Insertar o actualizar según sea necesario
+            // Si no hay conflicto de cédula, proceder con la inserción o actualización
             if ($iddocente == 0) {
-                // Si no existe el ID del docente, entonces se está creando un nuevo docente
+                // Insertar un nuevo docente (cuando $iddocente es 0)
                 $sqlInsert = 'INSERT INTO profesor (nombre, direccion, cedula, clave, telefono, correo, nivel_est, estado) VALUES (?, ?, ?, ?, ?, ?, ?, ?)';
                 $queryInsert = $pdo->prepare($sqlInsert);
                 $request = $queryInsert->execute(array($nombre, $direccion, $cedula, $password, $telefono, $correo, $nivel_est, $estado));
-                $accion = 1; // Indica que se ha creado un nuevo docente
+                $accion = 1;            
             } else {
-                // Actualizar el docente existente
+                // Actualizar un docente existente (cuando $iddocente es mayor a 0)
                 if (empty($password)) {
                     $sqlUpdate = 'UPDATE profesor SET nombre = ?, direccion = ?, cedula = ?, telefono = ?, correo = ?, nivel_est = ?, estado = ? WHERE profesor_id = ?';
                     $queryUpdate = $pdo->prepare($sqlUpdate);
                     $request = $queryUpdate->execute(array($nombre, $direccion, $cedula, $telefono, $correo, $nivel_est, $estado, $iddocente));
-                    $accion = 2; // Indica que se ha actualizado un docente
+                    $accion = 2;
                 } else {
                     $sqlUpdate = 'UPDATE profesor SET nombre = ?, direccion = ?, cedula = ?, clave = ?, telefono = ?, correo = ?, nivel_est = ?, estado = ? WHERE profesor_id = ?';
                     $queryUpdate = $pdo->prepare($sqlUpdate);
                     $request = $queryUpdate->execute(array($nombre, $direccion, $cedula, $password, $telefono, $correo, $nivel_est, $estado, $iddocente));
-                    $accion = 3; // Indica que se ha actualizado un docente con nueva contraseña
+                    $accion = 3;
                 }
             }
 
-            if ($request > 0) {
+            // Mensajes de éxito para creación o actualización
+            if ($request) {
                 if ($accion == 1) {
-                    $respuesta = array('status' => true, 'msg' => 'Docente Creado Correctamente');
+                    $respuesta = array('status' => true, 'msg' => 'Docente creado correctamente');
                 } else {
-                    $respuesta = array('status' => true, 'msg' => 'Docente Actualizado Correctamente');
+                    $respuesta = array('status' => true, 'msg' => 'Docente actualizado correctamente');
                 }
+            } else {
+                $respuesta = array('status' => false, 'msg' => 'Error al guardar los datos');
             }
         }
     }
 
-    // Enviar la respuesta como JSON
+    // Enviar la respuesta
     echo json_encode($respuesta, JSON_UNESCAPED_UNICODE);
 }
-
 ?>
+ñ

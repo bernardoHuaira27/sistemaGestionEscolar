@@ -14,9 +14,7 @@ if(!empty($_POST)) {
 
 
         // Cifrar la contraseña solo si no está vacía
-        if (!empty($password)) {
-            $password = password_hash($password, PASSWORD_DEFAULT);
-        }
+        
 
         // Corregir el error tipográfico en la consulta SQL
         $sql = 'SELECT * FROM usuarios WHERE usuario = ? AND usuario_id != ?';
